@@ -1,22 +1,43 @@
 import socket
+import threading
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def accept_client():
+    while True:
+        client_socket, client_address = server_socket.accept()
+        username = client_socket.recv(1024)
+        CONNECTION_LIST.append((username, client_socket))
+        print('%s is now connected' %username)
+        thread_client = threading.Thread(target = client_connection, args=[username, client_socket])
+        thread_client.start()
 
-s.bind(('localhost', 3333))
+def client_connection(username, client_socket):
+    while True:
+        try:
+            data = client_socket.recv(1024)
+            if data:
+                print (format(username),"spoke:",data)
+                broadcast_message(client_socket, username, data)
+        except Exception as x:
+            print(x.message)
+            break
 
-s.listen(5)
-flag = 0
-while True:
-    connect, addr = s.accept()
-    print("Connection Address:" + str(addr))
+def broadcast_message(cs_sock, sen_name, msg):
+    for client in CONNECTION_LIST:
+        #if client[1] != cs_sock:
+        client[1].send(sen_name + b': ' + msg)
+        #client[1].send(msg)
 
-    str_return = "Welcome to visit my test socket server. Waiting for command."
-    connect.sendto(bytes(str_return, 'utf-8'), addr)
+CONNECTION_LIST=[]
+HOST = ''
+PORT = 9999
 
-    str_recv, temp = connect.recvfrom(1024)
-    print(str_recv)
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-    str_return = "I got your command, it is " + str(str_recv)
-    connect.sendto(bytes(str_return, 'utf-8'), addr)
+server_socket.bind((HOST, PORT))
 
-    connect.close()
+server_socket.listen(1)
+print('Chat server started on port : ' + str(PORT))
+
+thread_accept = threading.Thread(target=accept_client)
+thread_accept.start()
+

@@ -17,3 +17,18 @@ def window():
     mainloop()
 
 window()
+
+# while True:
+#     connect, addr = server_socket.accept()
+#     print("Connection Address:" + str(addr))
+#
+#     str_return = "Welcome to visit my test socket server. Waiting for command."
+#     connect.sendto(bytes(str_return, 'utf-8'), addr)
+#
+#     str_recv, temp = connect.recvfrom(1024)
+#     print(str_recv)
+#
+#     str_return = "I got your command, it is " + str(str_recv)
+#     connect.sendto(bytes(str_return, 'utf-8'), addr)
+#
+#     connect.close()

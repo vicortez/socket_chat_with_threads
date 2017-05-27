@@ -1,8 +1,7 @@
 # UNIVERSIDADE FEDERAL DO RIO GRANDE DO NORTE
 # DEPARTAMENTO DE ENGENHARIA DE COMPUTACAO E AUTOMACAO
 # DISCIPLINA REDES DE COMPUTADORES (DCA0113)
-# AUTOR: PROF. CARLOS M D VIEGAS (viegas 'at' dca.ufrn.br)
-#
+# AUTOR: VICTOR CORTEZ
 # SCRIPT: Base de um servidor HTTP (python 3)
 #
 
@@ -18,7 +17,8 @@ PORT = 8080  # porta do servidor
 listen_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 # mantem o socket ativo mesmo apos a conexao ser encerrada (faz o reuso do endereco do servidor)
-listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 5)
+# set options at the socket level,
+listen_socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 
 # vincula o socket com a porta (faz o "bind" do servidor com a porta)
 listen_socket.bind((HOST, PORT))

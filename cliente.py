@@ -1,18 +1,29 @@
-import socket
+import socket, threading
 
-s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+def send():
+    while True:
+        msg = input('\nMe > ')
+        cli_sock.send(bytes(msg,encoding="UTF-8"))
 
-s.connect(("localhost", 3333))
+def receive():
+    while True:
+        data = cli_sock.recv(1024)
+        print(str(data))
 
-str_recv = s.recv(1024)
+if __name__ == "__main__":
+    # socket
+    cli_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-print(str(str_recv))
+    # connect
+    HOST = 'localhost'
+    PORT = 9999
+    cli_sock.connect((HOST, PORT))
+    print('Connected to remote host...')
+    uname = input('Enter your name to enter the chat > ')
+    cli_sock.send(bytes(uname,encoding="UTF-8"))
 
-str_send = "Hello, the world!"
+    thread_send = threading.Thread(target = send)
+    thread_send.start()
 
-s.send(bytes(str_send, 'utf-8'))
-
-str_recv = s.recv(1024)
-
-print(repr(str_recv))
-s.close()
+    thread_receive = threading.Thread(target = receive)
+    thread_receive.start()
