@@ -25,6 +25,7 @@ def broadcast_message(cs_sock, sen_name, msg):
     for client in CONNECTION_LIST:
         #if client[1] != cs_sock:
         client[1].send(sen_name + b': ' + msg)
+        print("message:",msg,"from:",sen_name,"sent to:",client[0])
         #client[1].send(msg)
 
 CONNECTION_LIST=[]
